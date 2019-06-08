@@ -5,7 +5,7 @@ import io
 import os
 import shutil
 import wx
-from wx.lib.expando import ExpandoTextCtrl
+#from wx.lib.expando import ExpandoTextCtrl
 
 import addonHandler
 import api

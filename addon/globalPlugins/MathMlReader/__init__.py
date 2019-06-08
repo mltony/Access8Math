@@ -1,4 +1,4 @@
-# coding: utf-8
+﻿# coding: utf-8
 # Access8Math: Allows access math content written by MathML in NVDA
 # Copyright (C) 2017-2019 Tseng Woody <tsengwoody.tw@gmail.com>
 # This file is covered by the GNU General Public License.
@@ -38,6 +38,7 @@ from keyboardHandler import KeyboardInputGesture
 from logHandler import log
 import mathPres
 from mathPres.mathPlayer import MathPlayer
+from scriptHandler import script
 import speech
 import textInfos
 import textInfos.offsets
@@ -422,6 +423,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		except (RuntimeError, AttributeError, wx.PyDeadObjectError):
 			pass
 
+	@script(
+		description=_("Change mathml provider"),
+		category=scriptCategory,
+		gestures=["kb:control+alt+m"]
+	)
 	def script_change_provider(self, gesture):
 		try:
 			index = (provider_list.index(config.conf["Access8Math"]["provider"]) +1)% len(provider_list)
@@ -438,9 +444,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		mathPres.registerProvider(reader, speech=True, braille=False, interaction=True)
 		config.conf["Access8Math"]["provider"] = provider_list[index]
 		ui.message(_("mathml provider change to %s")%config.conf["Access8Math"]["provider"])
-	script_change_provider.category = scriptCategory
-	# Translators: message presented in input mode.
-	script_change_provider.__doc__ = _("Change mathml provider")
 
 	def onGeneralSettings(self, evt):
 		from dialogs import GeneralSettingsDialog
@@ -502,12 +505,13 @@ If you feel this add-on is helpful, please don't hesitate to give support to "Ta
 			print type(mathml)
 			MathMlReaderInteraction(mathMl=mathml, show=True)
 
+	@script(
+		description=_("Shows the Access8Math settings dialog."),
+		category=scriptCategory,
+	)
 	def script_settings(self, gesture):
-		wx.CallAfter(self.onSettings, None)
-	script_settings.category = scriptCategory
-	# Translators: message presented in input mode.
-	script_settings.__doc__ = _("Shows the Access8Math settings dialog.")
+		wx.CallAfter(self.onGeneralSettings, None)
 
-	__gestures={
-		"kb:control+alt+m": "change_provider",
-	}
+	#__gestures={
+		#"kb:control+alt+m": "change_provider",
+	#}
